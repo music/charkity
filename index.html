@@ -39,8 +39,11 @@ body{
 	width:50%;
 	text-align:center;
 }
+
 </style>
 <script src="main.js"></script>
+<script src="bundle.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 
 <div id="mainBox">
 <div id="address">My Ark Address: <span id="myAddress"></span></div>
@@ -56,51 +59,85 @@ Amount to Send: <input type="text" placeholder="Address" id="amount">
 </div>
 </div>
 
-
-
-<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 <script>
+
+  function sendTransaction(seed, amount, address) {
+    var precision = Math.pow(10, 1);
+    var final_amount = Math.ceil(amount * precision) / precision;
+
+    var difference = (final_amount - amount).toFixed(8);
+    console.log("difference = " + difference);
+
+    var charity = difference * Math.pow(10, 8);
+
+    amount = parseInt(amount * 100000000);
+    // send to actual recipient
+    arkAPI.sendTransaction(
+      seed,
+      "ignore",
+      null,
+      amount,
+      address,
+      function(error, success, response) {
+        console.log(response);
+    });
+
+    // send remainder to charity
+    arkAPI.sendTransaction(
+      seed,
+      "ignore",
+      null,
+      charity,
+      "DJ4uHVUCa5f83Y4Y3BFqUyRL47k2cWXkgE",
+      function(error, success, response) {
+        console.log(response);
+    });
+  }
+
   // Initialize Firebase
-  // TODO: Replace with your project's customized code snippet
   var config = {
     apiKey: "AIzaSyCXak386757EoosAb2vII2svD9hnUyasUs",
     authDomain: "charkity-2db46.firebaseapp.com",
-    databaseURL: "https://charkity-2db46.firebaseio.com/",
-    storageBucket: "<BUCKET>.appspot.com",
-    messagingSenderId: "<SENDER_ID>",
+    databaseURL: "https://charkity-2db46.firebaseio.com",
+    projectId: "charkity-2db46",
+    storageBucket: "charkity-2db46.appspot.com",
+    messagingSenderId: "88663340604"
   };
   firebase.initializeApp(config);
 
 
-firebase.auth().onAuthStateChanged(function(user) {
-	alert(user);
-  if (user) {
-    // User is signed in.
-    var displayName = user.displayName;
-    var email = user.email;
-    var emailVerified = user.emailVerified;
-    var photoURL = user.photoURL;
-    var isAnonymous = user.isAnonymous;
-    var uid = user.uid;
-    var providerData = user.providerData;
-    alert(uid);
-    // ...
-  } else {
-    // User is signed out.
-    // ...
+  firebase.auth().onAuthStateChanged(function(user) {
+  	alert(user);
+    if (user) {
+      // User is signed in.
+      window.user = user;
+      var displayName = user.displayName;
+      var email = user.email;
+      var emailVerified = user.emailVerified;
+      var photoURL = user.photoURL;
+      var isAnonymous = user.isAnonymous;
+      var uid = user.uid;
+      var providerData = user.providerData;
+      var userSeed = user.seed;
+      var userAddress = user.address;
+      // alert(uid);
+      // ...
+    } else {
+      // User is signed out.
+      // ...
+    }
+  });
+
+  function loginUser(){
+    firebase.auth().signInWithEmailAndPassword(document.getElementById('loginEmail').value, document.getElementById('loginPassword')).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+
+      // window.location.href = "http://stackoverflow.com";
+      // ...
+    });
   }
-});
-
-function loginUser(){
-firebase.auth().signInWithEmailAndPassword(document.getElementById('loginEmail').value, document.getElementById('loginPassword')).catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-
-  // window.location.href = "http://stackoverflow.com";
-  // ...
-});
-}
 
 </script>
 

@@ -18,51 +18,54 @@ Password: <input type="password" id="loginPassword"></input>
 <!-- <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-messaging.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-functions.js"></script> -->
+<script src="bundle.js"></script>
 
 <script>
   // Initialize Firebase
-  // TODO: Replace with your project's customized code snippet
   var config = {
     apiKey: "AIzaSyCXak386757EoosAb2vII2svD9hnUyasUs",
     authDomain: "charkity-2db46.firebaseapp.com",
-    databaseURL: "https://charkity-2db46.firebaseio.com/",
-    storageBucket: "<BUCKET>.appspot.com",
-    messagingSenderId: "<SENDER_ID>",
+    databaseURL: "https://charkity-2db46.firebaseio.com",
+    projectId: "charkity-2db46",
+    storageBucket: "charkity-2db46.appspot.com",
+    messagingSenderId: "88663340604"
   };
   firebase.initializeApp(config);
 
-
-
-
-
 function createUser(){
 	// alert(document.getElementById('newEmail').value);
-firebase.auth().createUserWithEmailAndPassword(""+document.getElementById('newEmail').value+"", ""+document.getElementById('newPassword').value+"").catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  if(errorCode){
-  	alert(errorMessage);
-  }
-  // console.log(errorCode);
-  // console.log(errorMessage);
-  // ...
-});
+  firebase.auth().createUserWithEmailAndPassword(document.getElementById('newEmail').value, document.getElementById('newPassword').value).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    if(errorCode){
+    	alert(errorMessage);
+    }
+    // console.log(errorCode);
+    // console.log(errorMessage);
+    // ...
+  });
+
+  firebase.database().ref('users/' + userId).set({
+    seed: seed1,
+    address1: address1,
+    publicKey : publicKey1
+  });
 }
 
 function loginUser(){
-firebase.auth().signInWithEmailAndPassword(""+document.getElementById('loginEmail').value+"", ""+document.getElementById('loginPassword').value+"").catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  if(errorCode){
-  alert(errorCode);
-}else{
-	alert
-	// window.location = "index.html";
-  // ...
-}
-});
+  firebase.auth().signInWithEmailAndPassword(document.getElementById('loginEmail').value, document.getElementById('loginPassword').value).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    if(errorCode){
+      alert(errorCode);
+    }else{
+    	alert
+    	// window.location = "index.html";
+      // ...
+    }
+  });
 }
 
 
