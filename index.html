@@ -21,8 +21,8 @@ body{
 }
 #balance{
 	color:white;
-	font-size:81px;
-	background-color: green;
+	font-size:72px;
+	/*background-color: green;*/
 	position:relative;
 	top:25px;
 	margin:auto;
@@ -30,15 +30,30 @@ body{
 	text-align:center;
 }
 #address{
-
+	color:white;
+	font-size:46px;
+	/*background-color: green;*/
+	position:relative;
+	top:15px;
+	margin:auto;
+	width:50%;
+	text-align:center;
 }
 </style>
 <script src="main.js"></script>
 
 <div id="mainBox">
-<div id="balance">My Ark Address: <span id="myAddress"></span></div>
+<div id="address">My Ark Address: <span id="myAddress"></span></div>
 <div id="balance">My Ark Balance: <span id="myBalance"></span></div>
-<div class="sendRec"></div>
+<div id="middleMain">
+Send to: <input type="text" placeholder="Address" id="recieve">
+<br>
+Amount to Send: <input type="text" placeholder="Address" id="amount">
+<br>
+<div class="sendRec">
+	
+</div>
+</div>
 </div>
 
 
@@ -76,8 +91,6 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
-
-
 function loginUser(){
 firebase.auth().signInWithEmailAndPassword(document.getElementById('loginEmail').value, document.getElementById('loginPassword')).catch(function(error) {
   // Handle Errors here.
@@ -89,22 +102,6 @@ firebase.auth().signInWithEmailAndPassword(document.getElementById('loginEmail')
 });
 }
 
-	firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    // User is signed in.
-    var displayName = user.displayName;
-    var email = user.email;
-    var emailVerified = user.emailVerified;
-    var photoURL = user.photoURL;
-    var isAnonymous = user.isAnonymous;
-    var uid = user.uid;
-    var providerData = user.providerData;
-    // ...
-  } else {
-    // User is signed out.
-    // ...
-  }
-});
 </script>
 
 </body>
