@@ -2,15 +2,19 @@
 <body>
 <style>
 body{
-	background-color:rgba(184,38,26,.54);
+	background-color:rgba(184,38,26,.63);
 	padding:0px;
 	margin:0px;
 }
 .sendRec{
 	position:absolute;
 	background-color:white;
-	width:180px;
-	height:60px;
+	width:100%;
+	height:55px;
+	/*background-color:green;*/
+	top:75px;
+	font-size:30px;
+	color:grey;
 }
 #mainBox{
 	background-color:rgba(184,38,26,1.0);
@@ -21,37 +25,83 @@ body{
 }
 #balance{
 	color:white;
-	font-size:72px;
+	font-size:60px;
 	/*background-color: green;*/
 	position:relative;
-	top:25px;
+	top:23px;
 	margin:auto;
 	width:50%;
 	text-align:center;
 }
 #address{
 	color:white;
-	font-size:46px;
+	font-size:35px;
 	/*background-color: green;*/
 	position:relative;
-	top:15px;
+	top:13px;
 	margin:auto;
 	width:50%;
 	text-align:center;
 }
+#middleMain{
+	width:60%;
+	top:40px;
+	/*background-color:green;*/
+	height:200px;
+	position:relative;
+	margin:auto;
+}
+#recieve{
+	position:absolute;
+	font-size:27px;
+	left:0%;
+	width:75%;
+	height:55px;
+	border-radius:5px;
+	border:none;
+	top:0px;
+	padding-left:5px;
+}
+#amount{
+	padding-left:5px;
+	position:absolute;
+	font-size:27px;
+	border-radius:5px;
+	top:0px;
+width:20%;
+border:none;
+right:0%;
+height:55px;
+}
+#sendButton{
+	width:100%;
+	height:60px;
+	font-size:30px;
+	position:absolute;
+	background-color:white;
+	border-radius:5px;
+	top:180px;
+}
 </style>
 <script src="main.js"></script>
+<script src="require.js"></script>
 
 <div id="mainBox">
-<div id="address">My Ark Address: <span id="myAddress"></span></div>
-<div id="balance">My Ark Balance: <span id="myBalance"></span></div>
+<div id="address">Address: <span id="myAddress"></span></div>
+<div id="balance">Balance: <span id="myBalance"></span></div>
 <div id="middleMain">
-Send to: <input type="text" placeholder="Address" id="recieve">
+<input type="text" placeholder="Recipient's Address" id="recieve">
 <br>
-Amount to Send: <input type="text" placeholder="Address" id="amount">
+<input type="text" placeholder="# of Ark" id="amount">
 <br>
-<div class="sendRec">
-	
+	<select class="sendRec">
+  <option value="choose">Choose a Charity to Support: </option>
+  <option value="rc">American Red Cross</option>
+  <option value="ph">Purple Heart</option>
+  <option value="ww">Wounded Warriors</option>
+  <option value="sj">St. Jude's Children Hospital</option>
+</select>
+<button id="sendButton">Send Ark!</button>
 </div>
 </div>
 </div>
@@ -60,6 +110,10 @@ Amount to Send: <input type="text" placeholder="Address" id="amount">
 
 <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 <script>
+var arkAPI = require(["ark-api"]);
+var arkJS = require(["arkjs"]);
+var bip39 = require(["bip39"]);
+
   // Initialize Firebase
   // TODO: Replace with your project's customized code snippet
   var config = {
@@ -70,36 +124,43 @@ Amount to Send: <input type="text" placeholder="Address" id="amount">
     messagingSenderId: "<SENDER_ID>",
   };
   firebase.initializeApp(config);
+  var database = firebase.database();
 
 
 firebase.auth().onAuthStateChanged(function(user) {
-	alert(user);
+	// alert(user);
   if (user) {
     // User is signed in.
-    var displayName = user.displayName;
+    // var displayName = user.displayName;
     var email = user.email;
-    var emailVerified = user.emailVerified;
-    var photoURL = user.photoURL;
-    var isAnonymous = user.isAnonymous;
+       var photoURL = user.photoURL;
     var uid = user.uid;
-    var providerData = user.providerData;
-    alert(uid);
-    // ...
+    // var emailVerified = user.emailVerified;
+    // var isAnonymous = user.isAnonymous;
+    // var providerData = user.providerData;
+    // alert(uid);
+
+    var seed = bip39.generateMnemonic();
+
+var keys = arkJS.crypto.getKeys(seed);
+console.log(keys.publicKey);
+
+var address = arkJS.crypto.getAddress(keys.publicKey, 0x1E);
+writeUserData
+
   } else {
+  	window.location.href = "login.html";
     // User is signed out.
     // ...
   }
 });
 
-function loginUser(){
-firebase.auth().signInWithEmailAndPassword(document.getElementById('loginEmail').value, document.getElementById('loginPassword')).catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-
-  // window.location.href = "http://stackoverflow.com";
-  // ...
-});
+function writeUserData1(userId, publicKey1, address1, seed1) {
+  firebase.database().ref('users/' + userId).set({
+    seed: seed1,
+    address1: address1,
+    publicKey : publicKey1
+  });
 }
 
 </script>
