@@ -19,7 +19,7 @@ body{
 #mainBox{
 	background-color:rgba(184,38,26,1.0);
 	width:100%;
-	height:50%;
+	height:465;
 	position:relative;
 	top:5%;
 }
@@ -55,7 +55,7 @@ body{
 	position:absolute;
 	font-size:27px;
 	left:0%;
-	width:75%;
+	width:78%;
 	height:55px;
 	border-radius:5px;
 	border:none;
@@ -73,14 +73,20 @@ border:none;
 right:0%;
 height:55px;
 }
-#sendButton{
+#sendButton, #signOut {
 	width:100%;
 	height:60px;
 	font-size:30px;
 	position:absolute;
 	background-color:white;
 	border-radius:5px;
-	top:180px;
+	top:153px;
+}
+
+#signOut {
+  top: 235px;
+  width: 30%;
+  left: 35%;
 }
 #qrcode {
   padding-top: 2%;
@@ -91,7 +97,6 @@ height:55px;
 <script src="qrcode.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 
-<button id="signOut" onclick="signOut()">Sign Out</button>
 <center>
   <div id="qrcode"></div>
 </center>
@@ -103,13 +108,14 @@ height:55px;
 <br>
 <input type="text" placeholder="# of Ark" id="amount">
 <br>
-	<select class="sendRec" id="charity">
+<select class="sendRec" id="charity">
   <option value="choose">Choose a Charity to Support: </option>
   <option value="DJ4uHVUCa5f83Y4Y3BFqUyRL47k2cWXkgE">American Red Cross</option>
   <option value="DL3Nwk384ncUt39uXzBZtwcvENnF8ecmMw">Purple Heart</option>
   <option value="DHSjfthDB1LjMiofUqnKXjFU3vi3rEQ8va">Wounded Warriors</option>
 </select>
 <button onclick="sendTransaction()" id="sendButton">Send Ark!</button>
+<button id="signOut" onclick="signOut()">Sign Out</button>
 </div>
 
 <script>

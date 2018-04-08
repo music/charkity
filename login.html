@@ -51,37 +51,6 @@ body{
   position:relative;
   margin:auto;
 }
-/*#recieve{
-  position:absolute;
-  font-size:27px;
-  left:0%;
-  width:75%;
-  height:55px;
-  border-radius:5px;
-  border:none;
-  top:0px;
-  padding-left:5px;
-}
-#amount{
-  padding-left:5px;
-  position:absolute;
-  font-size:27px;
-  border-radius:5px;
-  top:0px;
-width:20%;
-border:none;
-right:0%;
-height:55px;
-}
-#sendButton{
-  width:100%;
-  height:60px;
-  font-size:30px;
-  position:absolute;
-  background-color:white;
-  border-radius:5px;
-  top:180px;
-}*/
 #emailDiv{
 
 }
@@ -166,7 +135,7 @@ function createUser(){
     var errorCode = error.code;
     var errorMessage = error.message;
     if(errorCode){
-    	// alert(errorMessage);
+    	alert(errorMessage);
     }
     // console.log(errorCode);
     // console.log(errorMessage);
@@ -187,9 +156,8 @@ function loginUser(){
     var errorCode = error.code;
     var errorMessage = error.message;
     if(errorCode){
-      alert(errorCode);
+      alert(errorMessage);
     }else{
-      alert("hello world");
     	// window.location = "index.html";
       // ...
     }
