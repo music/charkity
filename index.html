@@ -100,9 +100,8 @@ height:55px;
 	<select class="sendRec" id="charity">
   <option value="choose">Choose a Charity to Support: </option>
   <option value="DJ4uHVUCa5f83Y4Y3BFqUyRL47k2cWXkgE">American Red Cross</option>
-  <option value="E">Purple Heart</option>
-  <option value="F">Wounded Warriors</option>
-  <option value="G">St. Jude's Children Hospital</option>
+  <option value="DL3Nwk384ncUt39uXzBZtwcvENnF8ecmMw">Purple Heart</option>
+  <option value="DHSjfthDB1LjMiofUqnKXjFU3vi3rEQ8va">Wounded Warriors</option>
 </select>
 <button onclick="sendTransaction()" id="sendButton">Send Ark!</button>
 </div>
@@ -118,24 +117,37 @@ height:55px;
     messagingSenderId: "88663340604"
   };
   firebase.initializeApp(config);
- var database = firebase.database();
+  var database = firebase.database();
 
- var myAddress = "";
- var mySeed = "";
- var myPublicKey = "";
+  var myAddress = "";
+  var mySeed = "";
+  var myPublicKey = "";
+
+  function setBalance() {
+    arkAPI.getBalance(
+      myAddress,
+      function(error, success, response) {
+        document.getElementById("myBalance").innerHTML = response.balance/100000000;
+      }
+    );
+  }
 
 
-
-function signOut(){
-  firebase.auth().signOut().then(function() {
-  // alert('Signed Out');
-}, function(error) {
-  alert('Sign Out Error', error);
-});
-}
+  function signOut(){
+    firebase.auth().signOut().then(function() {
+    // alert('Signed Out');
+    }, function(error) {
+      alert('Sign Out Error', error);
+    });
+  }
 
 
   function sendTransaction() {
+    if (document.getElementById("charity").value == "choose") {
+      alert("You need to choose a charity!");
+      return;
+    }
+
     var seed = mySeed;
     var amount = document.getElementById("amount").value;
     var address = myAddress;
@@ -155,7 +167,7 @@ function signOut(){
       "ignore",
       myPublicKey,
       amount,
-      address,
+      document.getElementById("recieve").value,
       function(error, success, response) {
         console.log(response);
     });
@@ -168,7 +180,15 @@ function signOut(){
       charity,
       document.getElementById("charity").value,
       function(error, success, response) {
-        console.log(response);
+        if (!error) {
+          console.log(response);
+          // reset values
+          document.getElementById("charity").selectedIndex = 0;
+          document.getElementById("recieve").value = '';
+          document.getElementById("amount").value = '';
+        } else {
+          console.log(error);
+        }
     });
   }
 
@@ -188,24 +208,19 @@ function signOut(){
       // var userSeed = user.seed;
       // var userAddress = user.address;
       // alert(uid);
-  var userId = firebase.auth().currentUser.uid;
-  var leadsRef = database.ref('/users/' + userId);
-leadsRef.on('value', function(snapshot) {
-  myAddress = snapshot.child("address").val();
-   mySeed = snapshot.child("seed").val();
-   myPublicKey = snapshot.child("publicKey").val();
-    document.getElementById("myAddress").innerHTML = myAddress;
-    // forEach(function(childSnapshot) {
-    //   alert(childSnapshot.val());
-    // });
+      var userId = firebase.auth().currentUser.uid;
+      var leadsRef = database.ref('/users/' + userId);
+      leadsRef.on('value', function(snapshot) {
+        myAddress = snapshot.child("address").val();
+        mySeed = snapshot.child("seed").val();
+        myPublicKey = snapshot.child("publicKey").val();
+        document.getElementById("myAddress").innerHTML = myAddress;
+        // forEach(function(childSnapshot) {
+        //   alert(childSnapshot.val());
+        // });
 
- arkAPI.getBalance(
-      "DTBgCyvrZRoPunVipK9wWVhNC6b7s8UK6x",
-      function(error, success, response) {
-        document.getElementById("myBalance").innerHTML = response.balance/100000000;
-    });
-
-});
+        setBalance();
+      });
       // ...
     } else {
       window.location = "login.html";
@@ -224,6 +239,10 @@ leadsRef.on('value', function(snapshot) {
       // ...
     });
   }
+
+  setInterval(() => {
+    setBalance();
+  }, 3000);
 </script>
 
 </body>
