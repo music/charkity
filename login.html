@@ -21,6 +21,8 @@ Password: <input type="password" id="loginPassword"></input>
 <script src="bundle.js"></script>
 
 <script>
+
+var userCreated = 0; 
   // Initialize Firebase
   var config = {
     apiKey: "AIzaSyCXak386757EoosAb2vII2svD9hnUyasUs",
@@ -45,16 +47,7 @@ function createUser(){
     // console.log(errorMessage);
     // ...
   });
-
-  var seed = bip39.generateMnemonic();
-  var keys = arkJS.crypto.getKeys(seed);
-  var address = arkJS.crypto.getAddress(keys.publicKey, 0x1E);
-
-  firebase.database().ref('users/' + userId).set({
-    seed: seed,
-    address: address,
-    publicKey : publicKey
-  });
+userCreated = 1;
 }
 
 function loginUser(){
@@ -76,8 +69,27 @@ function loginUser(){
 	firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
-    alert("signed in");
-window.location.href = "index.html";
+    // alert("signed in");
+    if(userCreated == 1){
+      var seed = bip39.generateMnemonic();
+  var keys = arkJS.crypto.getKeys(seed);
+  var address = arkJS.crypto.getAddress(keys.publicKey, 0x1E);
+
+  firebase.database().ref('users/' + user.uid).set({
+    seed: seed,
+    address: address,
+    publicKey : keys.publicKey
+  }, function(error){
+ if(error){
+    console.log(error);
+ }
+ else{
+    window.location = "index.html";
+  }
+
+});
+}
+// window.location.href = "index.html";
   } else {
   	alert(user);
     // User is signed out.

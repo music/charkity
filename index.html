@@ -84,9 +84,10 @@ height:55px;
 }
 </style>
 <script src="main.js"></script>
-<script src="require.js"></script>
+<!-- <script src="require.js"></script> -->
 <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 
+<button id="signOut" onclick="signOut()">Sign Out</button>
 <div id="mainBox">
 <div id="address">Address: <span id="myAddress"></span></div>
 <div id="balance">Balance: <span id="myBalance"></span></div>
@@ -106,6 +107,28 @@ height:55px;
 </div>
 
 <script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCXak386757EoosAb2vII2svD9hnUyasUs",
+    authDomain: "charkity-2db46.firebaseapp.com",
+    databaseURL: "https://charkity-2db46.firebaseio.com",
+    projectId: "charkity-2db46",
+    storageBucket: "charkity-2db46.appspot.com",
+    messagingSenderId: "88663340604"
+  };
+  firebase.initializeApp(config);
+  var database = firebase.database();
+
+
+function signOut(){
+  firebase.auth().signOut().then(function() {
+  // alert('Signed Out');
+}, function(error) {
+  alert('Sign Out Error', error);
+});
+}
+
+
   function sendTransaction() {
     var seed = window.user.seed;
     var amount = window.user.amount;
@@ -143,36 +166,25 @@ height:55px;
     });
   }
 
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyCXak386757EoosAb2vII2svD9hnUyasUs",
-    authDomain: "charkity-2db46.firebaseapp.com",
-    databaseURL: "https://charkity-2db46.firebaseio.com",
-    projectId: "charkity-2db46",
-    storageBucket: "charkity-2db46.appspot.com",
-    messagingSenderId: "88663340604"
-  };
-  firebase.initializeApp(config);
-  var database = firebase.database();
-
 
   firebase.auth().onAuthStateChanged(function(user) {
-  	alert(user);
     if (user) {
       // User is signed in.
-      window.user = user;
+      // window.user = user;
       var displayName = user.displayName;
       var email = user.email;
-      var emailVerified = user.emailVerified;
-      var photoURL = user.photoURL;
-      var isAnonymous = user.isAnonymous;
       var uid = user.uid;
-      var providerData = user.providerData;
-      var userSeed = user.seed;
-      var userAddress = user.address;
-      // alert(uid);
+      // var emailVerified = user.emailVerified;
+      // var photoURL = user.photoURL;
+      // var isAnonymous = user.isAnonymous;
+
+      // var providerData = user.providerData;
+      // var userSeed = user.seed;
+      // var userAddress = user.address;
+      alert(uid);
       // ...
     } else {
+      window.location = "login.html";
       // User is signed out.
       // ...
     }
