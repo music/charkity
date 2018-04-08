@@ -30,7 +30,7 @@ body{
 	position:relative;
 	top:23px;
 	margin:auto;
-	width:50%;
+	width:100%;
 	text-align:center;
 }
 #address{
@@ -40,7 +40,7 @@ body{
 	position:relative;
 	top:13px;
 	margin:auto;
-	width:50%;
+	width:100%;
 	text-align:center;
 }
 #middleMain{
@@ -84,6 +84,7 @@ height:55px;
 }
 </style>
 <script src="main.js"></script>
+<script src="bundle.js"></script>
 <!-- <script src="require.js"></script> -->
 <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 
@@ -96,12 +97,12 @@ height:55px;
 <br>
 <input type="text" placeholder="# of Ark" id="amount">
 <br>
-	<select class="sendRec">
+	<select class="sendRec" id="charity">
   <option value="choose">Choose a Charity to Support: </option>
-  <option value="rc">American Red Cross</option>
-  <option value="ph">Purple Heart</option>
-  <option value="ww">Wounded Warriors</option>
-  <option value="sj">St. Jude's Children Hospital</option>
+  <option value="DJ4uHVUCa5f83Y4Y3BFqUyRL47k2cWXkgE">American Red Cross</option>
+  <option value="E">Purple Heart</option>
+  <option value="F">Wounded Warriors</option>
+  <option value="G">St. Jude's Children Hospital</option>
 </select>
 <button onclick="sendTransaction()" id="sendButton">Send Ark!</button>
 </div>
@@ -117,7 +118,12 @@ height:55px;
     messagingSenderId: "88663340604"
   };
   firebase.initializeApp(config);
-  var database = firebase.database();
+ var database = firebase.database();
+
+ var myAddress = "";
+ var mySeed = "";
+ var myPublicKey = "";
+
 
 
 function signOut(){
@@ -130,9 +136,9 @@ function signOut(){
 
 
   function sendTransaction() {
-    var seed = window.user.seed;
-    var amount = window.user.amount;
-    var address = window.user.address;
+    var seed = mySeed;
+    var amount = document.getElementById("amount").value;
+    var address = myAddress;
     
     var precision = Math.pow(10, 1);
     var final_amount = Math.ceil(amount * precision) / precision;
@@ -147,7 +153,7 @@ function signOut(){
     arkAPI.sendTransaction(
       seed,
       "ignore",
-      null,
+      myPublicKey,
       amount,
       address,
       function(error, success, response) {
@@ -158,9 +164,9 @@ function signOut(){
     arkAPI.sendTransaction(
       seed,
       "ignore",
-      null,
+      myPublicKey,
       charity,
-      "DJ4uHVUCa5f83Y4Y3BFqUyRL47k2cWXkgE",
+      document.getElementById("charity").value,
       function(error, success, response) {
         console.log(response);
     });
@@ -181,7 +187,25 @@ function signOut(){
       // var providerData = user.providerData;
       // var userSeed = user.seed;
       // var userAddress = user.address;
-      alert(uid);
+      // alert(uid);
+  var userId = firebase.auth().currentUser.uid;
+  var leadsRef = database.ref('/users/' + userId);
+leadsRef.on('value', function(snapshot) {
+  myAddress = snapshot.child("address").val();
+   mySeed = snapshot.child("seed").val();
+   myPublicKey = snapshot.child("publicKey").val();
+    document.getElementById("myAddress").innerHTML = myAddress;
+    // forEach(function(childSnapshot) {
+    //   alert(childSnapshot.val());
+    // });
+
+ arkAPI.getBalance(
+      "DTBgCyvrZRoPunVipK9wWVhNC6b7s8UK6x",
+      function(error, success, response) {
+        document.getElementById("myBalance").innerHTML = response.balance/100000000;
+    });
+
+});
       // ...
     } else {
       window.location = "login.html";
