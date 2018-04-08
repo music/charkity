@@ -46,10 +46,14 @@ function createUser(){
     // ...
   });
 
+  var seed = bip39.generateMnemonic();
+  var keys = arkJS.crypto.getKeys(seed);
+  var address = arkJS.crypto.getAddress(keys.publicKey, 0x1E);
+
   firebase.database().ref('users/' + userId).set({
-    seed: seed1,
-    address1: address1,
-    publicKey : publicKey1
+    seed: seed,
+    address: address,
+    publicKey : publicKey
   });
 }
 

@@ -102,11 +102,15 @@ height:55px;
   <option value="ww">Wounded Warriors</option>
   <option value="sj">St. Jude's Children Hospital</option>
 </select>
-<button id="sendButton">Send Ark!</button>
+<button onclick="sendTransaction()" id="sendButton">Send Ark!</button>
 </div>
 
 <script>
-  function sendTransaction(seed, amount, address) {
+  function sendTransaction() {
+    var seed = window.user.seed;
+    var amount = window.user.amount;
+    var address = window.user.address;
+    
     var precision = Math.pow(10, 1);
     var final_amount = Math.ceil(amount * precision) / precision;
 
