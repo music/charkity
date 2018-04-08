@@ -51,13 +51,20 @@ userCreated = 1;
 }
 
 function loginUser(){
-  firebase.auth().signInWithEmailAndPassword(document.getElementById('loginEmail').value, document.getElementById('loginPassword').value).catch(function(error) {
+  // alert(document.getElementById('loginEmail').value);
+  // alert(document.getElementById('loginPassword').value);
+  firebase.auth().signInWithEmailAndPassword(document.getElementById('loginEmail').value, document.getElementById('loginPassword').value).then(function(user){
+    // alert("reached then call");
+    // alert(user);
+    window.location = "index.html";
+  }).catch(function(error) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
     if(errorCode){
-      // alert(errorCode);
+      alert(errorCode);
     }else{
+      alert("hello world");
     	// window.location = "index.html";
       // ...
     }
