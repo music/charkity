@@ -21,7 +21,7 @@ body{
 	width:100%;
 	height:50%;
 	position:relative;
-	top:25%;
+	top:5%;
 }
 #balance{
 	color:white;
@@ -82,13 +82,19 @@ height:55px;
 	border-radius:5px;
 	top:180px;
 }
+#qrcode {
+  padding-top: 2%;
+}
 </style>
 <script src="main.js"></script>
 <script src="bundle.js"></script>
-<!-- <script src="require.js"></script> -->
+<script src="qrcode.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
 
 <button id="signOut" onclick="signOut()">Sign Out</button>
+<center>
+  <div id="qrcode"></div>
+</center>
 <div id="mainBox">
 <div id="address">Address: <span id="myAddress"></span></div>
 <div id="balance">Balance: <span id="myBalance"></span></div>
@@ -218,7 +224,7 @@ height:55px;
         // forEach(function(childSnapshot) {
         //   alert(childSnapshot.val());
         // });
-
+        new QRCode(document.getElementById("qrcode"), myAddress);
         setBalance();
       });
       // ...
