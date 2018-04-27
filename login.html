@@ -1,202 +1,33 @@
 <html>
-<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-<style>
-body{
-  background-color:rgba(184,38,26,.63);
-  padding:0px;
-  margin:0px;
-}
-.sendRec{
-  position:absolute;
-  background-color:white;
-  width:100%;
-  height:55px;
-  /*background-color:green;*/
-  top:75px;
-  font-size:30px;
-  color:grey;
-}
-#mainBox{
-  background-color:rgba(184,38,26,1.0);
-  width:100%;
-  height:30%;
-  position:absolute;
-  top:35%;
-}
-#balance{
-  color:white;
-  font-size:60px;
-  /*background-color: green;*/
-  position:relative;
-  top:23px;
-  margin:auto;
-  width:100%;
-  text-align:center;
-}
-#address{
-  color:white;
-  font-size:35px;
-  /*background-color: green;*/
-  position:relative;
-  top:13px;
-  margin:auto;
-  width:100%;
-  text-align:center;
-}
-.middleMain{
-  width:60%;
-  top:20%;
-  /*background-color:green;*/
-  height:59px;
-  position:relative;
-  margin:auto;
-}
-#emailDiv{
-
-}
-#newEmail{
-/*float:left;*/
-left:0%;
-}
-#passwordDiv{
-
-}
-.texters{
-   padding-left:5px;
-  position:absolute;
-  font-size:27px;
-  border-radius:5px;
-  top:0px;
-width:48%;
-border:none;
-/*right:0%;*/
-height:55px;
-}
-#newPassword{
-/*float:right;*/
-right:0%;
-}
-#otherMiddle{
-  top:32%;
-  /*width:70%;*/
-}
-#topName{
-font-size:38px;
-position:relative;
-top:57px;
-font-family: 'Open Sans', sans-serif;
-}
-</style>
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+  <link rel="stylesheet" type="text/css" href="login.css">
+</head>
 <body>
-<center id="topName">
-<span style="font-size:72px">Char(k)ity</span>
-<br>
-<span>A Charity Wallet for the Ark Platform</span>
-</center>
-<div id="mainBox">
-<div class="middleMain">
-<div id="emailDiv"><input type="text" id="newEmail" class="texters" placeholder="Email"></input></div>
-<div id="passwordDiv"><input type="password" class="texters" id="newPassword" placeholder="Password"></input></div>
-</div>
-<div class="middleMain" id="otherMiddle">
-<button onclick="createUser()" class="texters" style="right:0px">Sign Up</button>
-<button onclick="loginUser()" class="texters">Sign In</button>
-</div>
-</div>
+  <center id="topName">
+  <span style="font-size:72px">Char(k)ity</span>
+  <br>
+  <span>A Charity Wallet for the Ark Platform</span>
+  </center>
+  <div id="mainBox">
+    <div class="middleMain">
+      <div id="emailDiv">
+        <input type="text" id="newEmail" class="texters" placeholder="Email"></input>
+      </div>
+      <div id="passwordDiv">
+        <input type="password" class="texters" id="newPassword" placeholder="Password"></input>
+      </div>
+    </div>
+    <div class="middleMain" id="otherMiddle">
+      <button onclick="createUser()" class="texters" style="right:0px">Sign Up</button>
+      <button onclick="loginUser()" class="texters">Sign In</button>
+    </div>
+  </div>
 
-
-
-<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-database.js"></script>
-<!-- <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-messaging.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-functions.js"></script> -->
-<script src="bundle.js"></script>
-
-<script>
-
-var userCreated = 0; 
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyCXak386757EoosAb2vII2svD9hnUyasUs",
-    authDomain: "charkity-2db46.firebaseapp.com",
-    databaseURL: "https://charkity-2db46.firebaseio.com",
-    projectId: "charkity-2db46",
-    storageBucket: "charkity-2db46.appspot.com",
-    messagingSenderId: "88663340604"
-  };
-  firebase.initializeApp(config);
-
-function createUser(){
-	// alert(document.getElementById('newEmail').value);
-  firebase.auth().createUserWithEmailAndPassword(document.getElementById('newEmail').value, document.getElementById('newPassword').value).catch(function(error) {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    if(errorCode){
-    	alert(errorMessage);
-    }
-    // console.log(errorCode);
-    // console.log(errorMessage);
-    // ...
-  });
-userCreated = 1;
-}
-
-function loginUser(){
-  // alert(document.getElementById('loginEmail').value);
-  // alert(document.getElementById('loginPassword').value);
-  firebase.auth().signInWithEmailAndPassword(document.getElementById('newEmail').value, document.getElementById('newPassword').value).then(function(user){
-    // alert("reached then call");
-    // alert(user);
-    window.location = "index.html";
-  }).catch(function(error) {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    if(errorCode){
-      alert(errorMessage);
-    }else{
-    	// window.location = "index.html";
-      // ...
-    }
-  });
-}
-
-
-	firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    // User is signed in.
-    // alert("signed in");
-    if(userCreated == 1){
-      var seed = bip39.generateMnemonic();
-  var keys = arkJS.crypto.getKeys(seed);
-  var address = arkJS.crypto.getAddress(keys.publicKey, 0x1E);
-
-  firebase.database().ref('users/' + user.uid).set({
-    seed: seed,
-    address: address,
-    publicKey : keys.publicKey
-  }, function(error){
- if(error){
-    console.log(error);
- }
- else{
-    window.location = "index.html";
-  }
-
-});
-}
-// window.location.href = "index.html";
-  } else {
-  	// alert(user);
-    // User is signed out.
-    // ...
-  }
-});
-
-
-</script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-database.js"></script>
+  <script src="bundle.js"></script>
+  <script src="login.js"></script>
 </body>
 </html>
